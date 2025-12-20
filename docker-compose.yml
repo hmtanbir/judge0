@@ -32,8 +32,8 @@ services:
     image: postgres:16.2
     env_file: judge0.conf
     environment:
-      POSTGRES_USER: judge0
-      POSTGRES_PASSWORD: judge0_secret_password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     volumes:
       - data:/var/lib/postgresql/data/
     <<: *default-logging
