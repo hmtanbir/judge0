@@ -19,6 +19,8 @@ services:
   worker:
     image: hmtanbir/judge0:0.0.1
     command: ["./scripts/workers"]
+    environment:
+      BUNDLE_FROZEN: "true"
     volumes:
       - ./judge0.conf:/judge0.conf:ro
     privileged: true
