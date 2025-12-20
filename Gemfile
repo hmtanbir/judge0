@@ -19,3 +19,5 @@ group :development do
   gem 'annotate', '~> 3.0'
   gem 'listen', '~> 3.2'
 end
+
+gem "concurrent-ruby", "1.3.4"
