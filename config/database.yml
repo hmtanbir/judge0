@@ -9,9 +9,12 @@ default: &default
 
 development:
   <<: *default
+  database: judge0_development
 
 test:
   <<: *default
+  database: judge0_test
 
 production:
   <<: *default
+  database: judge0_production
