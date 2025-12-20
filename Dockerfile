@@ -3,7 +3,7 @@ FROM hmtanbir/compilers:0.0.3 AS production
 ENV JUDGE0_HOMEPAGE "https://judge0.com"
 LABEL homepage=$JUDGE0_HOMEPAGE
 
-ENV JUDGE0_SOURCE_CODE "https://github.com/judge0/judge0"
+ENV JUDGE0_SOURCE_CODE "https://github.com/hmtanbir/judge0"
 LABEL source_code=$JUDGE0_SOURCE_CODE
 
 ENV JUDGE0_MAINTAINER "Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
@@ -19,7 +19,7 @@ RUN apt-get update && \
       sudo && \
     rm -rf /var/lib/apt/lists/* && \
     echo "gem: --no-document" > /root/.gemrc && \
-    gem install bundler:2.1.4 && \
+    gem install bundler && \
     npm install -g --unsafe-perm aglio@2.3.0
 
 EXPOSE 2358
