@@ -3,6 +3,7 @@ default: &default
   encoding: unicode
   host: <%= ENV.fetch("POSTGRES_HOST", "db") %>
   port: <%= ENV.fetch("POSTGRES_PORT", 5432) %>
+  database: <%= "#{ENV.fetch('POSTGRES_DB', 'judge0')}" %>
   username: <%= ENV.fetch("POSTGRES_USER", "postgres") %>
   password: <%= ENV.fetch("POSTGRES_PASSWORD", "postgres") %>
   pool: <%= [
@@ -13,12 +14,9 @@ default: &default
 
 development:
   <<: *default
-  database: <%= "#{ENV.fetch('POSTGRES_DB', 'judge0')}_development" %>
 
 test:
   <<: *default
-  database: <%= "#{ENV.fetch('POSTGRES_DB', 'judge0')}_test" %>
 
 production:
   <<: *default
-  database: <%= "#{ENV.fetch('POSTGRES_DB', 'judge0')}_production" %>
