@@ -8,40 +8,88 @@ x-logging:
 services:
   server:
     image: hmtanbir/judge0:latest
+    container_name: judge0_server
+    depends_on:
+      redis:
+        condition: service_started
+      db:
+        condition: service_healthy
+    restart: always
+    command: ["./scripts/server"]
     volumes:
       - ./judge0.conf:/judge0.conf:ro
     ports:
       - "2358:2358"
     privileged: true
     <<: *default-logging
-    restart: always
+    networks:
+      - judge0-network
 
   worker:
     image: hmtanbir/judge0:latest
+    container_name: judge0_worker
+    depends_on:
+      redis:
+        condition: service_started
+      db:
+        condition: service_healthy
+    restart: always
     command: ["./scripts/workers"]
     volumes:
       - ./judge0.conf:/judge0.conf:ro
     privileged: true
     <<: *default-logging
-    restart: always
+    networks:
+      - judge0-network
 
   db:
     image: postgres:16.2
-    env_file: .env.docker
-    volumes:
-      - data:/var/lib/postgresql/data/
-    <<: *default-logging
+    container_name: judge0_db
     restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    ports:
+      - "5432:5432"
+    <<: *default-logging
+    environment:
+      POSTGRES_USER: judge0
+      POSTGRES_PASSWORD: judge0_secret_password
+    volumes:
+      - pgdata://var/lib/postgresql/data/
+    networks:
+      - judge0-network
 
   redis:
     image: redis:7.2.4
+    container_name: judge0_redis
+    restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 3s
+      timeout: 5s
+      retries: 5
     command: [
       "bash", "-c",
       'docker-entrypoint.sh --appendonly no --requirepass "$$REDIS_PASSWORD"'
     ]
-    env_file: .env.docker
     <<: *default-logging
-    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_PASSWORD: judge0_secret_password
+    volumes:
+      - redisdata:/data
+    networks:
+      - judge0-network
 
 volumes:
-  data:
+  pgdata:
+  redisdata:
+
+networks:
+  judge0-network:
+    driver: bridge
