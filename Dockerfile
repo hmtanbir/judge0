@@ -29,23 +29,24 @@ RUN apt-get update && \
       cron \
       sudo \
       libpq-dev \
-      libsystemd-dev \
-      systemd \
-      systemd-sysv \
       build-essential \
       pkg-config \
       libcap-dev \
       git \
       ca-certificates \
+      libsystemd-dev \
+      systemd \
+      asciidoc \
     && rm -rf /var/lib/apt/lists/*
 
+
 # ----------------------------------------------------
-# Install isolate (disable cgroups + systemd)
+# Install isolate
 # ----------------------------------------------------
 RUN git clone https://github.com/ioi/isolate.git /tmp/isolate && \
     cd /tmp/isolate && \
     make && \
-    make install && \
+    make install SKIP_DOCS=1 && \
     cd / && \
     rm -rf /tmp/isolate
 
