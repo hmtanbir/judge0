@@ -45,7 +45,7 @@ RUN apt-get update && \
 # ----------------------------------------------------
 RUN git clone https://github.com/ioi/isolate.git /tmp/isolate && \
     cd /tmp/isolate && \
-    make && \
+    make SKIP_DOCS=1 && \
     make install SKIP_DOCS=1 && \
     cd / && \
     rm -rf /tmp/isolate
