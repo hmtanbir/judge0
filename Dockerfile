@@ -37,12 +37,12 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # ----------------------------------------------------
-# Install isolate (without systemd)
+# Install isolate (disable cgroups + systemd)
 # ----------------------------------------------------
 RUN git clone https://github.com/ioi/isolate.git /tmp/isolate && \
     cd /tmp/isolate && \
-    make SYSTEMD=0 && \
-    make install SYSTEMD=0 && \
+    make CGROUPS=0 && \
+    make install CGROUPS=0 && \
     cd / && \
     rm -rf /tmp/isolate
 
