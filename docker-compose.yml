@@ -18,6 +18,7 @@ services:
     command: ["./scripts/server"]
     volumes:
       - ./judge0.conf:/judge0.conf:ro
+      - boxdata:/box
     ports:
       - "2358:2358"
     privileged: true
@@ -37,6 +38,7 @@ services:
     command: ["./scripts/workers"]
     volumes:
       - ./judge0.conf:/judge0.conf:ro
+      - boxdata:/box
     privileged: true
     <<: *default-logging
     networks:
@@ -89,6 +91,7 @@ services:
 volumes:
   pgdata:
   redisdata:
+  boxdata:
 
 networks:
   judge0-network:
