@@ -29,6 +29,9 @@ RUN apt-get update && \
       cron \
       sudo \
       libpq-dev \
+      libsystemd-dev \
+      systemd \
+      systemd-sysv \
       build-essential \
       pkg-config \
       libcap-dev \
@@ -41,8 +44,8 @@ RUN apt-get update && \
 # ----------------------------------------------------
 RUN git clone https://github.com/ioi/isolate.git /tmp/isolate && \
     cd /tmp/isolate && \
-    make CGROUPS=0 && \
-    make install CGROUPS=0 && \
+    make && \
+    make install && \
     cd / && \
     rm -rf /tmp/isolate
 
