@@ -37,14 +37,15 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # ----------------------------------------------------
-# Install isolate from source
+# Install isolate (without systemd)
 # ----------------------------------------------------
 RUN git clone https://github.com/ioi/isolate.git /tmp/isolate && \
     cd /tmp/isolate && \
-    make && \
-    make install && \
+    make SYSTEMD=0 && \
+    make install SYSTEMD=0 && \
     cd / && \
     rm -rf /tmp/isolate
+
 
 # ----------------------------------------------------
 # Ruby & Node tooling
