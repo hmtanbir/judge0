@@ -37,7 +37,9 @@ RUN apt-get update && \
       libsystemd-dev \
       systemd \
       asciidoc \
+      libxml2-utils \
     && rm -rf /var/lib/apt/lists/*
+
 
 
 # ----------------------------------------------------
@@ -45,8 +47,8 @@ RUN apt-get update && \
 # ----------------------------------------------------
 RUN git clone https://github.com/ioi/isolate.git /tmp/isolate && \
     cd /tmp/isolate && \
-    make SKIP_DOCS=1 && \
-    make install SKIP_DOCS=1 && \
+    make && \
+    make install && \
     cd / && \
     rm -rf /tmp/isolate
 
