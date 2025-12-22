@@ -45,13 +45,13 @@ RUN apt-get update && \
 # ----------------------------------------------------
 # Install isolate
 # ----------------------------------------------------
-RUN git clone https://github.com/ioi/isolate.git /tmp/isolate && \
-    cd /tmp/isolate && \
-    make isolate && \
-    make install && \
-    isolate --version && \
-    cd / && \
-    rm -rf /tmp/isolate
+RUN apt-get update && apt-get install -y \
+    git build-essential libcap-dev \
+ && git clone https://github.com/ioi/isolate.git /opt/isolate \
+ && cd /opt/isolate \
+ && make \
+ && make install \
+ && isolate --version
 
 
 # ----------------------------------------------------
