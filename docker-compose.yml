@@ -15,7 +15,7 @@ services:
       db:
         condition: service_healthy
     restart: always
-    command: ["./scripts/server"]
+    command: ["bash", "-c", "sudo mkdir -p /box && sudo chmod 1777 /box && exec ./scripts/server"]
     volumes:
       - ./judge0.conf:/judge0.conf:ro
       - type: tmpfs
@@ -36,7 +36,7 @@ services:
       db:
         condition: service_healthy
     restart: always
-    command: ["./scripts/workers"]
+    command: ["bash", "-c", "sudo mkdir -p /box && sudo chmod 1777 /box && exec ./scripts/workers"]
     volumes:
       - ./judge0.conf:/judge0.conf:ro
       - type: tmpfs
