@@ -56,7 +56,7 @@ services:
       - "5432:5432"
     <<: *default-logging
     environment:
-      POSTGRES_USER: postgres
+      POSTGRES_USER: judge0
       POSTGRES_PASSWORD: judge0_secret_password
     volumes:
       - pgdata://var/lib/postgresql/data/
