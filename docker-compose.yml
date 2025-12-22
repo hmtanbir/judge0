@@ -37,8 +37,6 @@ services:
     command: ["bash", "-c", "sudo mkdir -p /box && sudo chmod 1777 /box && exec ./scripts/workers"]
     volumes:
       - ./judge0.conf:/judge0.conf:ro
-      - type: tmpfs
-        target: /box
     privileged: true
     <<: *default-logging
     networks:
