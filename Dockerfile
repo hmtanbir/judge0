@@ -47,9 +47,9 @@ RUN apt-get update && \
 # ----------------------------------------------------
 RUN git clone https://github.com/ioi/isolate.git /tmp/isolate && \
     cd /tmp/isolate && \
-    sed -i '/isolate\.1/d' Makefile && \
-    make && \
+    make isolate && \
     make install && \
+    isolate --version && \
     cd / && \
     rm -rf /tmp/isolate
 
