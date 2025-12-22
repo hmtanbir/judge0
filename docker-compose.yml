@@ -24,6 +24,8 @@ services:
     <<: *default-logging
     networks:
       - judge0-network
+    environment:
+      DISABLE_CGROUPS: "true"
 
   worker:
     image: hmtanbir/judge0:latest
@@ -41,6 +43,8 @@ services:
     <<: *default-logging
     networks:
       - judge0-network
+    environment:
+      DISABLE_CGROUPS: "true"
 
   db:
     image: postgres:16.2
