@@ -18,8 +18,6 @@ services:
     command: ["bash", "-c", "sudo mkdir -p /box && sudo chmod 1777 /box && exec ./scripts/server"]
     volumes:
       - ./judge0.conf:/judge0.conf:ro
-      - type: tmpfs
-        target: /box
     ports:
       - "2358:2358"
     privileged: true
@@ -93,7 +91,6 @@ services:
 volumes:
   pgdata:
   redisdata:
-  box:
 
 networks:
   judge0-network:
