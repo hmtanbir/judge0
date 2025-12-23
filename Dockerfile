@@ -55,6 +55,14 @@ RUN git clone https://github.com/ioi/isolate.git /tmp/isolate && \
 
 
 # ----------------------------------------------------
+# Create cgroup directory
+# ----------------------------------------------------
+
+RUN mkdir -p /run/isolate/cgroup \
+    && chmod 755 /run/isolate \
+    && chmod 755 /run/isolate/cgroup
+
+# ----------------------------------------------------
 # Ruby & Node tooling
 # ----------------------------------------------------
 RUN echo "gem: --no-document" > /root/.gemrc && \
