@@ -22,8 +22,8 @@
     name: "Java (OpenJDK 25.0.1)",
     is_archived: false,
     source_file: "Main.java",
-    compile_cmd: "/usr/lib/jvm/temurin-25-jdk-amd64/bin/javac Main.java",
-    run_cmd: "/usr/lib/jvm/temurin-25-jdk-amd64/bin/java Main"
+    compile_cmd: "javac Main.java",
+    run_cmd: "java Main"
   },
   {
     id: 93,
