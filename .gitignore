@@ -7,3 +7,5 @@ tmp/*
 coverage/
 srv/
 environment
+.idea/
+.env

@@ -1,52 +1,105 @@
-FROM judge0/compilers:1.4.0 AS production
+FROM hmtanbir/compilers:0.0.3 AS production
 
+# ----------------------------------------------------
+# Metadata
+# ----------------------------------------------------
 ENV JUDGE0_HOMEPAGE "https://judge0.com"
 LABEL homepage=$JUDGE0_HOMEPAGE
 
-ENV JUDGE0_SOURCE_CODE "https://github.com/judge0/judge0"
+ENV JUDGE0_SOURCE_CODE "https://github.com/hmtanbir/judge0"
 LABEL source_code=$JUDGE0_SOURCE_CODE
 
 ENV JUDGE0_MAINTAINER "Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
 LABEL maintainer=$JUDGE0_MAINTAINER
 
-ENV PATH "/usr/local/ruby-2.7.0/bin:/opt/.gem/bin:$PATH"
-ENV GEM_HOME "/opt/.gem/"
+ENV JUDGE0_VERSION "1.13.1"
+LABEL version=$JUDGE0_VERSION
 
+# ----------------------------------------------------
+# Paths
+# ----------------------------------------------------
+ENV PATH="/usr/local/bin:/opt/.gem/bin:$PATH"
+ENV GEM_HOME="/opt/.gem/"
+
+# ----------------------------------------------------
+# System dependencies + isolate build deps
+# ----------------------------------------------------
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       cron \
+      sudo \
       libpq-dev \
-      sudo && \
-    rm -rf /var/lib/apt/lists/* && \
-    echo "gem: --no-document" > /root/.gemrc && \
-    gem install bundler:2.1.4 && \
+      build-essential \
+      pkg-config \
+      libcap-dev \
+      git \
+      ca-certificates \
+      libsystemd-dev \
+      systemd \
+      asciidoc \
+      libxml2-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+
+
+# ----------------------------------------------------
+# Install isolate
+# ----------------------------------------------------
+RUN git clone https://github.com/ioi/isolate.git /tmp/isolate && \
+    cd /tmp/isolate && \
+    make isolate && \
+    make install && \
+    isolate --version && \
+    cd / && \
+    rm -rf /tmp/isolate
+
+
+# ----------------------------------------------------
+# Create cgroup directory
+# ----------------------------------------------------
+
+RUN mkdir -p /run/isolate/cgroup \
+    && chmod 755 /run/isolate \
+    && chmod 755 /run/isolate/cgroup
+
+# ----------------------------------------------------
+# Ruby & Node tooling
+# ----------------------------------------------------
+RUN echo "gem: --no-document" > /root/.gemrc && \
+    gem install bundler && \
     npm install -g --unsafe-perm aglio@2.3.0
 
+# ----------------------------------------------------
+# App setup
+# ----------------------------------------------------
 EXPOSE 2358
-
 WORKDIR /api
 
 COPY Gemfile* ./
-RUN RAILS_ENV=production bundle
+RUN RAILS_ENV=production bundle install --jobs 4 --retry 3
 
 COPY cron /etc/cron.d
 RUN cat /etc/cron.d/* | crontab -
 
 COPY . .
 
-ENTRYPOINT ["/api/docker-entrypoint.sh"]
-CMD ["/api/scripts/server"]
-
+# ----------------------------------------------------
+# User setup
+# ----------------------------------------------------
 RUN useradd -u 1000 -m -r judge0 && \
     echo "judge0 ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers && \
     chown judge0: /api/tmp/
 
 USER judge0
 
-ENV JUDGE0_VERSION "1.13.1"
-LABEL version=$JUDGE0_VERSION
+# ----------------------------------------------------
+# Entrypoint
+# ----------------------------------------------------
+ENTRYPOINT ["/api/docker-entrypoint.sh"]
+CMD ["/api/scripts/server"]
 
-
+# ----------------------------------------------------
+# Development stage
+# ----------------------------------------------------
 FROM production AS development
-
 CMD ["sleep", "infinity"]
